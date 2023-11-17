@@ -1,0 +1,17 @@
+[package]
+name = "jsonrpc_cli"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.75"
+clap = "4.4.8"
+jsonrpc-core = "18.0.0"
+regex = "1.10.2"
+serde_json = "1.0.108"
+ureq = "2.8.0"
+
+[dev-dependencies]
+jsonrpc-http-server = "18.0.0"

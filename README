@@ -1,0 +1,37 @@
+jsonrpc-cli
+===
+
+A jsonrpc command line tool for devlopment and testing. It's written in Rust so it's fast and easy to install.
+
+Usage
+--------
+
+    jsonrpc --endpoint <endpoint> [options] <method> [<params>]
+
+Params can be the following formats:
+
+1. JSON string, e.g. `{"a": 1, "b": 2}`
+2. JSON file, e.g. `@/path/to/file.json`
+3. Key-value pair
+    Examples
+    - `a=int(1) b=null()` generates `{"a": 1, "b": null}`
+    - `--a=1 --b=2` generates `{"a": "1", "b": "2"}`
+    - `-a 1 -b 2` generates `{"a": "1", "b": "2"}`
+4. Array separated by comma, e.g. `1,2,3` generates `[1, 2, 3]`
+
+Options
+--------
+
+    -h, --help              output usage information
+    -V, --version           output the version number
+    -v, --rpc-version <version>     jsonrpc version, default: 2.0
+    -e, --endpoint <endpoint>         jsonrpc server endpoint
+    -i, --id <id>           jsonrpc id, e.g. "test", "int(1)", "null()"
+        --verbose           verbose output
+
+NOTE: `--endpoint` can be set by environment variable `JSONRPC_ENDPOINT`.
+
+License
+--------
+
+This program is licensed under the MIT license.
