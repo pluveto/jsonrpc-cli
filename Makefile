@@ -31,6 +31,10 @@ install: build
 	@mkdir -p $(BINDIR)
 	@cp target/$(TARGET_DIR)/$(PROG) $(BINDIR)/$(PROG)$(EXTENSION)
 
+lint:
+	$(CARGO) clippy -- -D warnings
+	$(CARGO) fmt --all -- --check
+
 all: build install
 
 help:

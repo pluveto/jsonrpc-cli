@@ -1,3 +1,4 @@
+use serde_json::Value;
 use std::net::TcpListener;
 
 fn port_is_available(port: u16) -> bool {
@@ -28,7 +29,7 @@ fn test_run_without_args() {
 fn test_run_without_server_running() {
     let output = test_bin::get_test_bin("jsonrpc-cli")
         .arg("-e")
-        .arg("http://localhost:3030")
+        .arg("http://localhost:3029")
         .arg("say_hello")
         .output()
         .expect("failed to start binary");
@@ -56,7 +57,6 @@ impl ServerContext {
             .arg("--")
             .arg("test_serve_dev_only")
             .arg("--exact")
-            .arg("--nocapture")
             .spawn()
             .expect("failed to start server");
 
@@ -90,7 +90,8 @@ impl Drop for ServerContext {
 
 #[test]
 fn test_hello() {
-    let port = ServerContext::setup().port;
+    let env = ServerContext::setup();
+    let port = env.port;
     let output = test_bin::get_test_bin("jsonrpc-cli")
         .arg("-e")
         .arg(format!("http://127.0.0.1:{port}"))
@@ -99,11 +100,62 @@ fn test_hello() {
         .expect("failed to start binary");
     let stderr = String::from_utf8_lossy(&output.stderr);
     assert_eq!(stderr, "", "got: {}", stderr);
-    use serde_json::Value;
 
     let stdout = String::from_utf8_lossy(&output.stdout);
     let actual: Value = serde_json::from_str(&stdout).expect("Failed to parse JSON");
     let expected: Value = serde_json::json!({"jsonrpc":"2.0","result":"hello","id":null});
+
+    assert_eq!(actual, expected, "got: {}", stdout);
+}
+
+#[test]
+fn test_add() {
+    let env = ServerContext::setup();
+    let port = env.port;
+    let output = test_bin::get_test_bin("jsonrpc-cli")
+        .arg("-e")
+        .arg(format!("http://127.0.0.1:{port}"))
+        .arg("add")
+        .arg("1,2")
+        .output()
+        .expect("failed to start binary");
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(stderr, "", "got: {}", stderr);
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let actual: Value = serde_json::from_str(&stdout).expect("Failed to parse JSON");
+    let expected: Value = serde_json::json!({"jsonrpc":"2.0","result":3,"id":null});
+
+    assert_eq!(actual, expected, "got: {}", stdout);
+}
+
+#[test]
+fn test_vector_product() {
+    let env = ServerContext::setup();
+    let port = env.port;
+    let output = test_bin::get_test_bin("jsonrpc-cli")
+        .arg("-e")
+        .arg(format!("http://127.0.0.1:{port}"))
+        .arg("vector_product")
+        .arg(
+            serde_json::json!({
+                "a": [1, 2, 3],
+                "b": [4, 5, 6],
+            })
+            .to_string(),
+        )
+        .output()
+        .expect("failed to start binary");
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert_eq!(stderr, "", "got: {}", stderr);
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let actual: Value = serde_json::from_str(&stdout).expect("Failed to parse JSON");
+    let expected: Value = serde_json::json!({
+        "jsonrpc":"2.0",
+        "result": [4, 10, 18],
+        "id":null
+    });
 
     assert_eq!(actual, expected, "got: {}", stdout);
 }
