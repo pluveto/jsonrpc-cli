@@ -73,8 +73,8 @@ fn main() -> Result<()> {
     }
 
     let endpoint: String;
-    if endpoint_w.is_some() {
-        endpoint = endpoint_w.unwrap().to_owned();
+    if let Some(endpoint_w) = endpoint_w {
+        endpoint = endpoint_w.to_owned();
     } else {
         endpoint = endpoint_env.unwrap();
     }
@@ -183,6 +183,18 @@ fn parse_simple_expr(expr: &str) -> Result<Id> {
     }
 }
 
+fn extract_key_value<'a>(stripped: &'a str, next_param: Option<&'a str>) -> (&'a str, &'a str) {
+    let parts = stripped.splitn(2, '=').collect::<Vec<&str>>();
+    match parts.len() {
+        1 => (
+            parts[0],
+            next_param.unwrap_or_else(|| panic!("missing value for param {}", stripped)),
+        ),
+        2 => (parts[0], parts[1]),
+        _ => panic!("invalid long option: {}", stripped),
+    }
+}
+
 // Parse the params argument
 fn parse_params(params: Vec<&str>) -> Result<Value> {
     if params.is_empty() {
@@ -242,28 +254,13 @@ fn parse_params(params: Vec<&str>) -> Result<Value> {
     while let Some(param) = param_it.next() {
         // Check if param is a long option
         // like: --key=value or --key value
-        if param.starts_with("--") {
+        if let Some(stripped) = param.strip_prefix("--") {
             // Split the param by equal sign
-            let parts = param[2..].splitn(2, '=').collect::<Vec<&str>>();
-            let (key, value) = match parts.len() {
-                // If only one part, use it as key and next param as value
-                1 => (
-                    parts[0],
-                    *param_it
-                        .next()
-                        .unwrap_or_else(|| panic!("missing value for param {}", param)),
-                ),
-                // If two parts, use them as key and value
-                2 => (parts[0], parts[1]),
-                // Otherwise, panic
-                _ => panic!("invalid long option: {}", param),
-            };
+            let (key, value) = extract_key_value(stripped, param_it.next().copied());
             object.insert(key.to_string(), Value::String(value.to_string()));
         // Check if param is a short 'p'ion
-        } else if param.starts_with('-') {
-            // Get the key and value
-            let (key, value) = param[1..].split_at(1);
-            // Insert the key and value as string into the object
+        } else if let Some(stripped) = param.strip_prefix('-') {
+            let (key, value) = extract_key_value(stripped, param_it.next().copied());
             object.insert(key.to_string(), Value::String(value.to_string()));
 
         // Otherwise, assume param is a function call
