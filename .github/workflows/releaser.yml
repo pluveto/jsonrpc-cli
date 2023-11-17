@@ -42,9 +42,9 @@ jobs:
       - name: Rename artifacts and compress
         run: |
           cd target/${{ matrix.target }}/release
-          mv ${APP_NAME} ${APP_NAME}_${{ matrix.target }}
+          mv ${{ env.APP_NAME }} ${{ env.APP_NAME }}_${{ matrix.target }}
       - name: Upload Github Assets
         uses: softprops/action-gh-release@v1
         with:
-          files: target/${{ matrix.target }}/release/${APP_NAME}_*
+          files: target/${{ matrix.target }}/release/${{ env.APP_NAME }}_*
           prerelease: ${{ contains(github.ref, '-') }}
