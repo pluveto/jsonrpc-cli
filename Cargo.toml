@@ -13,3 +13,4 @@ ureq = "2.8.0"
 
 [dev-dependencies]
 jsonrpc-http-server = "18.0.0"
+test_bin = "0.4.0"

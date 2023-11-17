@@ -65,8 +65,8 @@ fn main() -> Result<()> {
     let endpoint_w = matches.get_one::<String>("endpoint");
     if endpoint_w.is_none() && !has_endpoint_set {
         return Err(anyhow::anyhow!("endpoint is not set")).context(
-            "Cannot find valid endpoint \n\
-             Please set the endpoint with -e or --endpoint option \
+            "cannot find valid endpoint \n\
+             please set the endpoint with -e or --endpoint option \
              or JSONRPC_ENDPOINT environment variable",
         );
     }
@@ -87,7 +87,7 @@ fn main() -> Result<()> {
         .map(|x| x.as_str())
         .collect();
 
-    let verbose = matches.get_one::<bool>("debug").is_some();
+    let verbose = matches.get_one::<bool>("debug").is_some_and(|x| *x);
 
     // Construct the jsonrpc request
     let request = build_request(method.map(|x| x.as_str()), version, id, params)?;
