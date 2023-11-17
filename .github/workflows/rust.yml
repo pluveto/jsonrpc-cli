@@ -6,6 +6,7 @@ on:
   pull_request:
     branches: [ "master", "main" ]
 
+
 env:
   CARGO_TERM_COLOR: always
 
@@ -19,7 +20,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ inputs.rust-version }}
+          toolchain: nightly
           override: true
           components: rustfmt, clippy
       - name: Set up cargo cache
@@ -52,6 +53,6 @@ jobs:
           cargo udeps
           rm -rf ~/.cargo/advisory-db
           cargo audit
-          cargo pants          
+          cargo pants
       - name: Test
         run: cargo test
