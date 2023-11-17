@@ -425,6 +425,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "af150ab688ff2122fcef229be89cb50dd66af9e01a4ff320cc137eecc9bacc38"
 
 [[package]]
+name = "jsonrpc-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "jsonrpc-core",
+ "jsonrpc-http-server",
+ "regex",
+ "serde_json",
+ "ureq",
+]
+
+[[package]]
 name = "jsonrpc-core"
 version = "18.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -471,19 +484,6 @@ dependencies = [
  "tokio-stream",
  "tokio-util",
  "unicase",
-]
-
-[[package]]
-name = "jsonrpc_cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "jsonrpc-core",
- "jsonrpc-http-server",
- "regex",
- "serde_json",
- "ureq",
 ]
 
 [[package]]
