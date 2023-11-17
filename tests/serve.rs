@@ -1,7 +1,6 @@
-
-
+// Use with the following command:
+// DEV_SERVER=1 cargo test --package jsonrpc-cli --test serve -- test_serve_dev_only --exact --nocapture
 #[test]
-// use `DEV_SERVER=1 cargo test --package jsonrpc_cli --test serve -- test_serve_dev_only --exact --nocapture`
 fn test_serve_dev_only() {
     use jsonrpc_http_server::jsonrpc_core::{IoHandler, Params, Value};
     use jsonrpc_http_server::ServerBuilder;

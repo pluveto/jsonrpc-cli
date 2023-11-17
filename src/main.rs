@@ -1,6 +1,5 @@
 // jsonrpc-cli
 // A jsonrpc command line tool for development and testing
-// Written in Rust
 
 use anyhow::{Context, Result};
 use clap::{Arg, ArgAction, Command};
