@@ -13,7 +13,9 @@ fn test_serve_dev_only() {
         return;
     }
 
-    fn main() {
+    let port = std::env::var("PORT").unwrap_or(3029.to_string());
+
+    fn serve(port: String) {
         let mut io = IoHandler::default();
         io.add_method("say_hello", |_params: Params| async {
             Ok(Value::String("hello".to_owned()))
@@ -64,12 +66,15 @@ fn test_serve_dev_only() {
             Ok(Value::Array(result))
         });
 
-        let host = "127.0.0.1:3030";
+        let host = format!("127.0.0.1:{}", port);
         let url = format!("http://{}", host);
         let server = ServerBuilder::new(io)
             .threads(1)
-            .start_http(&host.parse().unwrap())
-            .unwrap();
+            .start_http(&host.parse().unwrap());
+        if server.is_err() {
+            return;
+        }
+        let server = server.unwrap();
 
         println!("Dev server listening on {url}");
         println!("Press Ctrl-C to stop");
@@ -81,5 +86,5 @@ fn test_serve_dev_only() {
         server.wait();
     }
 
-    main();
+    serve(port);
 }
