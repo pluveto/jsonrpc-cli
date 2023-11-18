@@ -2,6 +2,8 @@
 name = "jsonrpc-cli"
 version = "0.1.1"
 edition = "2021"
+license = "MIT"
+description = "A command line interface for JSON-RPC 2.0 servers"
 
 [dependencies]
 anyhow = "1.0.75"
