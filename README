@@ -1,7 +1,7 @@
 jsonrpc-cli
-===
+========
 
-A jsonrpc command line utility for devlopment and testing. It's written in Rust so it's fast and easy to install.
+A jsonrpc command line utility for devlopment and testing.
 
 Usage
 --------
@@ -19,6 +19,17 @@ Params can be the following formats:
     - `-a 1 -b 2` generates `{"a": "1", "b": "2"}`
 4. Array separated by comma, e.g. `1,2,3` generates `[1, 2, 3]`
 
+Examples
+--------
+
+    # call `add` method with params `{"a": 1, "b": 2}`
+    JSONRPC_ENDPOINT=http://localhost:3000 jsonrpc add 1 2
+    # alternatively
+    JSONRPC_ENDPOINT=http://localhost:3000 jsonrpc add 1,2
+
+    # call `vector_product` method with params `{"a": [1, 2, 3], "b": [4, 5, 6]}`
+    JSONRPC_ENDPOINT=http://localhost:3000 jsonrpc vector_product {"a": [1, 2, 3], "b": [4, 5, 6]}
+
 Options
 --------
 
@@ -33,6 +44,11 @@ NOTE: `--endpoint` can be set by environment variable `JSONRPC_ENDPOINT`.
 
 Build and Install
 --------
+
+Released binaries are available at <https://github.com/pluveto/jsonrpc-cli/releases>. Or you can build it from source code:
+
+    git clone https://github.com/pluveto/jsonrpc-cli
+    cd jsonrpc-cli
 
 Default PREFIX is `/usr/local`, you can change it by `make PREFIX=/path/to/prefix install`.
 
